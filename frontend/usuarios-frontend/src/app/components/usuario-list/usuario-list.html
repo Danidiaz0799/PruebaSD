@@ -1,15 +1,15 @@
 <div class="usuario-container">
   <h2>Gestión de Usuarios</h2>
   
-  <!-- Sección de búsqueda -->
   <div class="search-section">
     <div class="search-input-group">
       <input 
         type="text" 
         [(ngModel)]="searchTerm" 
-        placeholder="Buscar usuarios..." 
+        placeholder="Buscar por nombre o apellido..." 
         class="search-input"
-        (keyup.enter)="searchUsuarios()"
+        (keypress)="onSearchKeyPress($event)"
+        [disabled]="loading"
       />
       <button 
         type="button" 
@@ -17,7 +17,8 @@
         (click)="searchUsuarios()"
         [disabled]="loading"
       >
-        Buscar
+        <span *ngIf="!loading">Buscar</span>
+        <span *ngIf="loading">Buscando...</span>
       </button>
       <button 
         type="button" 
@@ -30,17 +31,14 @@
     </div>
   </div>
 
-  <!-- Indicador de carga -->
   <div *ngIf="loading" class="loading">
     Cargando usuarios...
   </div>
 
-  <!-- Mensaje de error -->
-  <div *ngIf="error" class="error">
+  <div *ngIf="error && !loading" class="error">
     {{ error }}
   </div>
 
-  <!-- Tabla de usuarios -->
   <div *ngIf="!loading && !error" class="table-container">
     <table class="usuarios-table">
       <thead>
@@ -51,15 +49,29 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let usuario of usuarios" class="usuario-row">
+        <tr 
+          *ngFor="let usuario of usuarios; trackBy: trackByUsuarioId" 
+          class="usuario-row"
+        >
           <td>{{ usuario.usuID }}</td>
           <td>{{ usuario.nombre }}</td>
           <td>{{ usuario.apellido }}</td>
         </tr>
         <tr *ngIf="usuarios.length === 0">
-          <td colspan="3" class="no-data">No se encontraron usuarios</td>
+          <td colspan="3" class="no-data">
+            <span *ngIf="searchTerm">No se encontraron usuarios que coincidan con "{{ searchTerm }}"</span>
+            <span *ngIf="!searchTerm">No hay usuarios registrados</span>
+          </td>
         </tr>
       </tbody>
     </table>
+  </div>
+
+  <div *ngIf="!loading && !error && usuarios.length > 0" class="results-info">
+    <p>
+      <strong>{{ usuarios.length }}</strong> 
+      {{ usuarios.length === 1 ? 'usuario encontrado' : 'usuarios encontrados' }}
+      <span *ngIf="searchTerm"> para "{{ searchTerm }}"</span>
+    </p>
   </div>
 </div>
