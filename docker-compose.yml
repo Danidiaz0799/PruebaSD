@@ -1,0 +1,43 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: pruebasd-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: PruebaSD
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./Database/CreateDatabase.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - pruebasd-network
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pruebasd-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=PruebaSD;Username=postgres;Password=postgres
+    ports:
+      - "8000:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - pruebasd-network
+
+volumes:
+  postgres_data:
+
+networks:
+  pruebasd-network:
+    driver: bridge
