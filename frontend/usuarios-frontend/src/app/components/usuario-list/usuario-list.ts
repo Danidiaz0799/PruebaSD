@@ -33,7 +33,6 @@ export class UsuarioListComponent implements OnInit, OnDestroy {
 
   loadUsuarios(): void {
     this.setLoadingState(true);
-    
     this.usuarioService.getAllUsuarios()
       .pipe(
         takeUntil(this.destroy$),
@@ -47,14 +46,11 @@ export class UsuarioListComponent implements OnInit, OnDestroy {
 
   searchUsuarios(): void {
     const term = this.searchTerm.trim();
-    
     if (!term) {
       this.loadUsuarios();
       return;
     }
-
     this.setLoadingState(true);
-    
     this.usuarioService.searchUsuarios(term)
       .pipe(
         takeUntil(this.destroy$),
