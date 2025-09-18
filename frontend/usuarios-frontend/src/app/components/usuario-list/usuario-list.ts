@@ -17,6 +17,7 @@ export class UsuarioListComponent implements OnInit, OnDestroy {
   loading = false;
   error = '';
   searchTerm = '';
+  hasSearched = false;
 
   private destroy$ = new Subject<void>();
 
@@ -33,6 +34,7 @@ export class UsuarioListComponent implements OnInit, OnDestroy {
 
   loadUsuarios(): void {
     this.setLoadingState(true);
+    this.hasSearched = false;
     this.usuarioService.getAllUsuarios()
       .pipe(
         takeUntil(this.destroy$),
@@ -51,6 +53,7 @@ export class UsuarioListComponent implements OnInit, OnDestroy {
       return;
     }
     this.setLoadingState(true);
+    this.hasSearched = true;
     this.usuarioService.searchUsuarios(term)
       .pipe(
         takeUntil(this.destroy$),
@@ -64,6 +67,7 @@ export class UsuarioListComponent implements OnInit, OnDestroy {
 
   clearSearch(): void {
     this.searchTerm = '';
+    this.hasSearched = false;
     this.loadUsuarios();
   }
 

@@ -43,8 +43,7 @@
             <thead>
                 <tr>
                     <th>▼ Id</th>
-                    <th>▼ Nombre</th>
-                    <th>Apellido</th>
+                    <th>▼ Nombre Completo</th>
                 </tr>
             </thead>
             <tbody>
@@ -53,11 +52,10 @@
                     class="usuario-row"
                     >
                     <td>{{ usuario.usuID }}</td>
-                    <td>{{ usuario.nombre }}</td>
-                    <td>{{ usuario.apellido }}</td>
+                    <td>{{ usuario.nombreCompleto }}</td>
                 </tr>
                 <tr *ngIf="usuarios.length === 0">
-                    <td colspan="3" class="no-data">
+                    <td colspan="2" class="no-data">
                         <span *ngIf="searchTerm">No se encontraron usuarios que coincidan con "{{ searchTerm }}"</span>
                         <span *ngIf="!searchTerm">No hay usuarios registrados</span>
                     </td>
@@ -66,7 +64,7 @@
         </table>
     </div>
 
-    <div *ngIf="!loading && !error && usuarios.length > 0" class="results-info">
+    <div *ngIf="!loading && !error && usuarios.length > 0 && hasSearched" class="results-info">
         <p>
             <strong>{{ usuarios.length }}</strong>
                 {{ usuarios.length === 1 ? 'usuario encontrado' : 'usuarios encontrados' }}
