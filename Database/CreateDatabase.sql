@@ -1,24 +1,39 @@
--- Crear la base de datos PruebaSD (ejecutar como superusuario)
--- CREATE DATABASE "PruebaSD";
+-- Script para crear la base de datos PruebaSD en SQL Server
 
--- Conectar a la base de datos PruebaSD
--- \c PruebaSD;
+-- Crear la base de datos PruebaSD
+IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = N'PruebaSD')
+BEGIN
+    CREATE DATABASE [PruebaSD]
+END
+GO
 
--- Crear la tabla usuario
-CREATE TABLE IF NOT EXISTS usuario (
-    "usuID" NUMERIC(18,0) PRIMARY KEY,
-    nombre VARCHAR(100),
-    apellido VARCHAR(100)
-);
+USE [PruebaSD]
+GO
 
--- Poblar la tabla con 5 registros de prueba
-INSERT INTO usuario ("usuID", nombre, apellido) VALUES
-(1, 'Andres', 'Rodriguez Vera'),
-(2, 'Jose', 'Giraldo Perez'),
-(3, 'Maria', 'Lopez Garcia'),
-(4, 'Carlos', 'Martinez Ruiz'),
-(5, 'Ana', 'Fernandez Torres')
-ON CONFLICT ("usuID") DO NOTHING;
+-- Crear la tabla Usuario con ID autoincremental
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Usuario]') AND type in (N'U'))
+BEGIN
+    CREATE TABLE [dbo].[Usuario](
+        [UsuID] [numeric](18, 0) IDENTITY(1,1) NOT NULL,
+        [Nombre] [varchar](100) NULL,
+        [Apellido] [varchar](100) NULL,
+        CONSTRAINT [PK_Usuario] PRIMARY KEY CLUSTERED ([UsuID] ASC)
+    )
+END
+GO
+
+-- Poblar la tabla con 5 registros de prueba (sin especificar ID)
+IF NOT EXISTS (SELECT * FROM Usuario)
+BEGIN
+    INSERT INTO [dbo].[Usuario] ([Nombre], [Apellido]) VALUES
+    ('Andres', 'Rodriguez Vera'),
+    ('Jose', 'Giraldo Perez'),
+    ('Maria', 'Lopez Garcia'),
+    ('Carlos', 'Martinez Ruiz'),
+    ('Ana', 'Fernandez Torres')
+END
+GO
 
 -- Verificar los datos insertados
-SELECT * FROM usuario ORDER BY "usuID";
+SELECT * FROM Usuario ORDER BY UsuID
+GO

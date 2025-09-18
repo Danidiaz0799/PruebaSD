@@ -31,7 +31,7 @@ La aplicación permite buscar usuarios en una tabla y visualizar los resultados 
                                                            ↓
                                                   ┌─────────────────┐
                                                   │ Base de Datos   │
-                                                  │   PostgreSQL    │
+                                                  │   SQL Server    │
                                                   └─────────────────┘
 ```
 
@@ -40,10 +40,9 @@ La aplicación permite buscar usuarios en una tabla y visualizar los resultados 
 ### Backend (.NET 8)
 - **ASP.NET Core 8** - Framework web
 - **Entity Framework Core** - ORM para acceso a datos
-- **PostgreSQL** - Motor de base de datos
+- **SQL Server** - Motor de base de datos
 - **Clean Architecture** - Patrón arquitectónico
 - **Swagger/OpenAPI** - Documentación de API
-- **Docker** - Contenedorización
 
 ### Frontend (Angular)
 - **Angular 20** - Framework frontend
@@ -79,8 +78,7 @@ La base de datos incluye 5 registros de ejemplo:
 - .NET 8 SDK
 - Node.js 18+
 - Angular CLI 20+
-- Docker & Docker Compose
-- PostgreSQL (si no usa Docker)
+- SQL Server (LocalDB o SQL Server Express)
 
 ### 1. Clonar el Repositorio
 ```bash
@@ -88,19 +86,10 @@ git clone https://github.com/Danidiaz0799/PruebaSD.git
 cd PruebaSD
 ```
 
-### 2. Ejecución con Docker (Recomendado)
-```bash
-# Levantar toda la aplicación
-docker-compose up -d
+### 2. Configuración de Base de Datos
+Asegúrate de tener SQL Server configurado y actualiza la cadena de conexión en `appsettings.json` si es necesario.
 
-# Ver logs en tiempo real
-docker-compose logs -f
-
-# Detener servicios
-docker-compose down
-```
-
-### 3. Ejecución Manual
+### 3. Ejecución de la Aplicación
 
 #### Backend API
 ```bash
@@ -109,6 +98,9 @@ cd WebApi
 
 # Restaurar dependencias
 dotnet restore
+
+# Ejecutar migraciones (si es necesario)
+dotnet ef database update
 
 # Ejecutar la aplicación
 dotnet run
@@ -133,7 +125,7 @@ npm start
 | **Frontend** | http://localhost:4200 | Aplicación Angular |
 | **API Backend** | https://localhost:7000 | API REST |
 | **Swagger UI** | https://localhost:7000/swagger | Documentación interactiva |
-| **PostgreSQL** | localhost:5433 | Base de datos |
+| **SQL Server** | localhost | Base de datos |
 
 ## 📡 API Endpoints
 
@@ -187,7 +179,7 @@ npm start
 ### ✅ Capa de Acceso a Datos (Infrastructure)
 - [x] Repository pattern implementado
 - [x] Entity Framework Core configurado
-- [x] Conexión a PostgreSQL
+- [x] Conexión a SQL Server
 - [x] Migraciones de base de datos
 - [x] DbContext con configuración de entidades
 
@@ -235,10 +227,6 @@ PruebaSD/
 │       └── angular.json
 ├── 📁 Database/
 │   └── CreateDatabase.sql
-├── 📁 Docker/
-│   ├── docker-compose.yml
-│   ├── docker-compose.full.yml
-│   └── Dockerfile
 ├── PruebaSD.sln
 └── README.md
 ```
@@ -272,34 +260,11 @@ Al buscar "Vera":
 2. Probar endpoint `GET /api/Usuarios`
 3. Probar búsqueda: `GET /api/Usuarios/search?searchTerm=Vera`
 
-## 📦 Docker Configuration
-
-### docker-compose.yml
-```yaml
-version: '3.8'
-services:
-  postgres:
-    image: postgres:15
-    environment:
-      POSTGRES_DB: PruebaSD
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin123
-    ports:
-      - "5433:5432"
-  
-  api:
-    build: .
-    ports:
-      - "8000:80"
-    depends_on:
-      - postgres
-```
-
-## 🔧 Configuración de Desarrollo
+##  Configuración de Desarrollo
 
 ### Backend
 - **Puerto**: https://localhost:7000
-- **Base de datos**: PostgreSQL en puerto 5433
+- **Base de datos**: SQL Server LocalDB
 - **CORS**: Configurado para localhost:4200
 
 ### Frontend  
@@ -337,4 +302,4 @@ Proyecto desarrollado para prueba práctica - 2025
 
 **Desarrollado por**: Daniel Díaz  
 **Fecha**: Septiembre 2025  
-**Tecnologías**: .NET 8, Angular 20, PostgreSQL, Docker
+**Tecnologías**: .NET 8, Angular 20, SQL Server

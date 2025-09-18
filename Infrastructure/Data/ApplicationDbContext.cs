@@ -18,17 +18,15 @@ namespace Infrastructure.Data
                 entity.HasKey(e => e.UsuID);
                 entity.Property(e => e.UsuID)
                     .HasColumnType("numeric(18,0)")
-                    .ValueGeneratedNever()
-                    .HasColumnName("usuID");
+                    .ValueGeneratedOnAdd()
+                    .UseIdentityColumn();
                 entity.Property(e => e.Nombre)
                     .HasMaxLength(100)
-                    .HasColumnType("varchar(100)")
-                    .HasColumnName("nombre");
+                    .HasColumnType("varchar(100)");
                 entity.Property(e => e.Apellido)
                     .HasMaxLength(100)
-                    .HasColumnType("varchar(100)")
-                    .HasColumnName("apellido");
-                entity.ToTable("usuario");
+                    .HasColumnType("varchar(100)");
+                entity.ToTable("Usuario");
             });
 
             base.OnModelCreating(modelBuilder);
